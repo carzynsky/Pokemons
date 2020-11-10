@@ -11,3 +11,6 @@ web-build/
 
 # macOS
 .DS_Store
+assets/pokemonTypes/download.py
+assets/pokemonTypes/filenames.txt
+assets/pokemonTypes/xD.txt
