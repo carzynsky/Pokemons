@@ -69,10 +69,13 @@ export default class List extends Component {
 			}
 		})
 
-	
-		return ( 
-			<View style={styles.contentContainer}>
 
+		return (
+			<View style={styles.contentContainer}>
+				<View style={styles.header}>
+					<Text style={styles.headerText}>Header</Text>
+				</View>
+				<MySearchbar style={styles.searchbar} handler={this.handleChange.bind(this)}></MySearchbar>
 				<ScrollView
 					scrollEventThrottle={1}
 
@@ -87,69 +90,65 @@ export default class List extends Component {
 						}
 					}}
 					>
-						<View style={styles.header}>
-							<Text style={styles.headerText}>Header</Text>
-						</View>
-						<MySearchbar handler={this.handleChange.bind(this)}></MySearchbar>
 						<View>
 							{items}
 						</View>
 					</ScrollView>
 					<Modal visible={this.state.visible} onDismiss={this._hideModal} contentContainerStyle={styles.modalStyle}>
-        				<Text>Example Modal</Text>
-      				</Modal>
+						<Text>Example Modal</Text>
+	  				</Modal>
 			</View>
 		)
 	}
 }
 
 const styles = StyleSheet.create({
-    header: {
-        height: 60,
-        backgroundColor: 'orange',
-        alignItems: 'center',
+	header: {
+		height: 60,
+		backgroundColor: 'orange',
+		alignItems: 'center',
 		justifyContent: 'center',
-    },
-    headerText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'white',
-    },
-    contentContainer: {
+	},
+	headerText: {
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: 'white',
+	},
+	contentContainer: {
 		backgroundColor: 'white',
 		flex:1,
-    },
-    item: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: 'grey',
-        alignItems: 'center',
-    },
-    marginLeft: {
+	},
+	item: {
 		flexDirection: 'row',
-    },
-    menu: {
-        width: 20,
-        height: 2,
-        backgroundColor: '#111',
-        margin: 2,
-        borderRadius: 3,
-    },
-    text: {
-        marginVertical: 30,
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginLeft: 10
-    },
+		borderBottomWidth: 1,
+		borderBottomColor: 'grey',
+		alignItems: 'center',
+	},
+	marginLeft: {
+		flexDirection: 'row',
+	},
+	menu: {
+		width: 20,
+		height: 2,
+		backgroundColor: '#111',
+		margin: 2,
+		borderRadius: 3,
+	},
+	text: {
+		marginVertical: 30,
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginLeft: 10
+	},
 	tinyLogo: {
-		margin: 'auto', 
-	    width: 50,
-	    height: 50,
+		margin: 'auto',
+		width: 50,
+		height: 50,
 	},
 	modalStyle: {
-		backgroundColor: 'white', 
+		backgroundColor: 'white',
 		padding: 20
 	},
-}) 
+})
 
 
