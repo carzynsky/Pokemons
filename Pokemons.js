@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
 	tinyLogo: {
+		margin: 'auto', 
 	    width: 50,
 	    height: 50,
 	},
