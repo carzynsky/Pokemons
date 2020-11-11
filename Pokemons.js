@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {StyleSheet, Text, View, ScrollView, Image} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Image, TouchableOpacity} from 'react-native';
 import pokemons from './pokemons.json'
-import { Searchbar } from 'react-native-paper';
+import { Modal, Searchbar } from 'react-native-paper';
 
-const MyComponent = (props) => {
+const MySearchbar = (props) => {
 	const [searchQuery, setSearchQuery] = React.useState('');
 
 	const onChangeSearch = query => {
@@ -35,13 +35,16 @@ export default class List extends Component {
 			data: this.initData,
 			itemToRender: this.itemToRender,
 			searchValue: this.searchValue,
+			visible: false,
 		}
 	}
 
+	_showModal = () => this.setState({ visible: true });
+	_hideModal = () => this.setState({ visible: false });
 
 
 	handleChange(value) {
-		this.setState({ data: value });
+		this.setState({ data: value, itemToRender:20 });
 	};
 
 	render() {
@@ -52,15 +55,17 @@ export default class List extends Component {
 			})
 
 			if (index +1 <= this.state.itemToRender) {
-				return <View key={index} style={styles.item}>
-					<View style={styles.marginLeft}>
-						<Text style={styles.text}>{item[1]} </Text>
-						<Text style={styles.text}>{item[2]} </Text>
-						<Image style={styles.tinyLogo} source={require("./assets/pokemonMiniatures/" + item[0] + ".png")} />
-						<Text style={styles.text}>{item[3]} </Text>
-						{types}
+				return <TouchableOpacity onPress={this._showModal}>
+					<View key={index} style={styles.item}>
+						<View style={styles.marginLeft}>
+							<Text style={styles.text}>{item[1]} </Text>
+							<Text style={styles.text}>{item[2]} </Text>
+							<Image style={styles.tinyLogo} source={require("./assets/pokemonMiniatures/" + item[0] + ".png")} />
+							<Text style={styles.text}>{item[3]} </Text>
+							{types}
+						</View>
 					</View>
-				</View>
+				</TouchableOpacity>
 			}
 		})
 
@@ -85,11 +90,14 @@ export default class List extends Component {
 						<View style={styles.header}>
 							<Text style={styles.headerText}>Header</Text>
 						</View>
-						<MyComponent handler={this.handleChange.bind(this)}></MyComponent>
+						<MySearchbar handler={this.handleChange.bind(this)}></MySearchbar>
 						<View>
 							{items}
 						</View>
 					</ScrollView>
+					<Modal visible={this.state.visible} onDismiss={this._hideModal} contentContainerStyle={styles.modalStyle}>
+        				<Text>Example Modal</Text>
+      				</Modal>
 			</View>
 		)
 	}
@@ -136,6 +144,10 @@ const styles = StyleSheet.create({
 	tinyLogo: {
 	    width: 50,
 	    height: 50,
+	},
+	modalStyle: {
+		backgroundColor: 'white', 
+		padding: 20
 	},
 }) 
 
