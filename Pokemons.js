@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import {StyleSheet, Text, View, ScrollView, Image} from 'react-native';
-import pokemons from 'pokemons.json'
+import pokemons from './pokemons.json'
 import { Searchbar } from 'react-native-paper';
-
 
 const MyComponent = (props) => {
 	const [searchQuery, setSearchQuery] = React.useState('');
-  
-  
+
+	const onChangeSearch = query => {
+		setSearchQuery(query);
+		const pokemonsToRender = pokemons.data.filter((record) => {
+				return record[3].includes(query);
+		});
+		props.handler(pokemonsToRender);
+	}
+
 	return (
 	  <Searchbar
 		placeholder="Search"
-		onChangeText= {(query) => {props.handler(query)}}
+		onChangeText={onChangeSearch}
 		value={searchQuery}
 	  />
 	);
@@ -32,24 +38,26 @@ export default class List extends Component {
 		}
 	}
 
+
+
 	handleChange(value) {
-		this.setState({ searchValue: value });
+		this.setState({ data: value });
 	};
 
 	render() {
+		console.log(this.state.searchValue);
 		const items = this.state.data.map((item, index) => {
-			const types = item[3].split(' ').map((type) =>  {
+			const types = item[4].split(' ').map((type) =>  {
 				return <Image key={index + type} style={styles.tinyLogo} source={require("./assets/pokemonTypes/" + (type) + ".png")} />
 			})
 
 			if (index +1 <= this.state.itemToRender) {
-				console.log("./Strona/" + (index+1) + ".png")
 				return <View key={index} style={styles.item}>
 					<View style={styles.marginLeft}>
-						<Text style={styles.text}>{item[0]} </Text>
 						<Text style={styles.text}>{item[1]} </Text>
-						<Image style={styles.tinyLogo} source={require("./assets/pokemonMiniatures/" + (index+1) + ".png")} />
 						<Text style={styles.text}>{item[2]} </Text>
+						<Image style={styles.tinyLogo} source={require("./assets/pokemonMiniatures/" + item[0] + ".png")} />
+						<Text style={styles.text}>{item[3]} </Text>
 						{types}
 					</View>
 				</View>
@@ -77,7 +85,7 @@ export default class List extends Component {
 						<View style={styles.header}>
 							<Text style={styles.headerText}>Header</Text>
 						</View>
-						<MyComponent handler={this.handleChange}></MyComponent>
+						<MyComponent handler={this.handleChange.bind(this)}></MyComponent>
 						<View>
 							{items}
 						</View>
@@ -92,7 +100,7 @@ const styles = StyleSheet.create({
         height: 60,
         backgroundColor: 'orange',
         alignItems: 'center',
-        justifyContent: 'center',
+		justifyContent: 'center',
     },
     headerText: {
         fontSize: 20,
