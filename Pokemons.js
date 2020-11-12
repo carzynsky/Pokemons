@@ -48,11 +48,12 @@ export default class List extends Component {
 		this.setState({ data: value, itemToRender:20 });
 	};
 
-	getPokemonFromApi = () => {
-		fetch('https://pokeapi.co/api/v2/pokemon/'+this.chosenPokemon[3].toLowerCase())
+	getPokemonFromApi = (name) => {
+		fetch('https://pokeapi.co/api/v2/pokemon/'+ name.toLowerCase())
 		.then((response) => response.json())
 		.then((json) => {
 			this.fetchedPokemon = json.name
+			this.setState({ visible: true })
 		})
 		.catch((error) => {
 			console.error(error)
@@ -67,8 +68,7 @@ export default class List extends Component {
 
 			if (index +1 <= this.state.itemToRender) {
 				return <TouchableOpacity onPress={()=>{
-					this.setState({ visible: true })
-					this.chosenPokemon = item
+					this.getPokemonFromApi(item[3])
 					}}>
 					<View key={index} style={styles.item}>
 						<View style={styles.marginLeft}>
@@ -109,7 +109,6 @@ export default class List extends Component {
 						</View>
 					</ScrollView>
 					<Modal visible={this.state.visible} onDismiss={this._hideModal} contentContainerStyle={styles.modalStyle}>
-						{this.getPokemonFromApi()}
 						<Text>{this.fetchedPokemon}</Text>
 	  				</Modal>
 			</View>
