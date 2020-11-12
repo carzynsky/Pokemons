@@ -31,15 +31,16 @@ export default class List extends Component {
 		this.initData = pokemons.data;
 		this.itemToRender = 20;
 		this.searchValue = "";
+		this.chosenPokemon = ["test", "test","test", "bulbasaur"]
+		this.fetchedPokemon = ""
 		this.state = {
 			data: this.initData,
 			itemToRender: this.itemToRender,
 			searchValue: this.searchValue,
-			visible: false,
+			visible: false
 		}
 	}
 
-	_showModal = () => this.setState({ visible: true });
 	_hideModal = () => this.setState({ visible: false });
 
 
@@ -47,15 +48,28 @@ export default class List extends Component {
 		this.setState({ data: value, itemToRender:20 });
 	};
 
+	getPokemonFromApi = () => {
+		fetch('https://pokeapi.co/api/v2/pokemon/'+this.chosenPokemon[3].toLowerCase())
+		.then((response) => response.json())
+		.then((json) => {
+			this.fetchedPokemon = json.name
+		})
+		.catch((error) => {
+			console.error(error)
+		});
+	}
+
 	render() {
-		console.log(this.state.searchValue);
 		const items = this.state.data.map((item, index) => {
 			const types = item[4].split(' ').map((type) =>  {
 				return <Image key={index + type} style={styles.tinyLogo} source={require("./assets/pokemonTypes/" + (type) + ".png")} />
 			})
 
 			if (index +1 <= this.state.itemToRender) {
-				return <TouchableOpacity onPress={this._showModal}>
+				return <TouchableOpacity onPress={()=>{
+					this.setState({ visible: true })
+					this.chosenPokemon = item
+					}}>
 					<View key={index} style={styles.item}>
 						<View style={styles.marginLeft}>
 							<Text style={styles.text}>{item[1]} </Text>
@@ -95,7 +109,8 @@ export default class List extends Component {
 						</View>
 					</ScrollView>
 					<Modal visible={this.state.visible} onDismiss={this._hideModal} contentContainerStyle={styles.modalStyle}>
-						<Text>Example Modal</Text>
+						{this.getPokemonFromApi()}
+						<Text>{this.fetchedPokemon}</Text>
 	  				</Modal>
 			</View>
 		)
