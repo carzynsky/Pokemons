@@ -9,7 +9,7 @@ const MySearchbar = (props) => {
 	const onChangeSearch = query => {
 		setSearchQuery(query);
 		const pokemonsToRender = pokemons.data.filter((record) => {
-				return record[3].includes(query);
+				return record[3].includes(query.charAt(0).toUpperCase() + query.slice(1))
 		});
 		props.handler(pokemonsToRender);
 	}
