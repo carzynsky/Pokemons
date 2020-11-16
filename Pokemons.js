@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {StyleSheet, Text, View, ScrollView, Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import pokemons from './pokemons.json'
-import { Modal, Searchbar } from 'react-native-paper';
+import { Modal, Searchbar, Button } from 'react-native-paper';
 
 const MySearchbar = (props) => {
 	const [searchQuery, setSearchQuery] = React.useState('');
@@ -23,7 +23,6 @@ const MySearchbar = (props) => {
 	);
   };
 
-
 export default class List extends Component {
 	constructor(props) {
 		super(props)
@@ -32,7 +31,7 @@ export default class List extends Component {
 		this.itemToRender = 20;
 		this.searchValue = "";
 		this.chosenPokemon = ["test", "test","test", "bulbasaur"]
-		this.fetchedPokemon = ""
+		this.fetchedPokemon = ["test", "test", "test", "test", [], [], []]
 		this.state = {
 			data: this.initData,
 			itemToRender: this.itemToRender,
@@ -52,7 +51,10 @@ export default class List extends Component {
 		fetch('https://pokeapi.co/api/v2/pokemon/'+ name.toLowerCase())
 		.then((response) => response.json())
 		.then((json) => {
-			this.fetchedPokemon = json.name
+			let imgUrl = "./assets/pokemonMiniatures/" + json.id + ".png"
+			const data = [imgUrl, json.name, json.base_experience, json.height, json.types, json.abilities, json.stats]
+			this.fetchedPokemon = data
+			console.log(json)
 			this.setState({ visible: true })
 		})
 		.catch((error) => {
@@ -63,7 +65,7 @@ export default class List extends Component {
 	render() {
 		const items = this.state.data.map((item, index) => {
 			const types = item[4].split(' ').map((type) =>  {
-				return <Image key={index + type} style={styles.tinyLogo} source={require("./assets/pokemonTypes/" + (type) + ".png")} />
+				return <Image key={index + type} style={styles.tinyLogo} source={require("" + "./assets/pokemonTypes/" + (type) + ".png")} />
 			})
 
 			if (index +1 <= this.state.itemToRender) {
@@ -109,7 +111,47 @@ export default class List extends Component {
 						</View>
 					</ScrollView>
 					<Modal visible={this.state.visible} onDismiss={this._hideModal} contentContainerStyle={styles.modalStyle}>
-						<Text>{this.fetchedPokemon}</Text>
+						<Text style={styles.modalTitleText}>{this.fetchedPokemon[1].toUpperCase()}</Text>
+						<View style={styles.modalRow}>
+							<Text style={styles.modalCategoryText}>Base experience: </Text>
+							<Text style={styles.modalItem}>{this.fetchedPokemon[2]}</Text>
+						</View>
+						<View style={styles.modalRow}>
+							<Text style={styles.modalCategoryText}>Height: </Text>
+							<Text style={styles.modalItem}>{this.fetchedPokemon[3]}</Text>
+						</View>
+						<View style={{ marginTop: 5 }}>
+							<Text style={styles.modalCategoryText}>Types:</Text>
+							{this.fetchedPokemon[4].map(x => {
+								return 	<View > 
+											<Text>{x.type.name}</Text>
+										</View>
+							})}
+						</View>
+						<View style={{ marginTop: 5 }}>
+							<Text style={styles.modalCategoryText}>Abilities:</Text>
+							{this.fetchedPokemon[5].map(x => {
+								return 	<View > 
+											<Text>{x.ability.name}</Text>
+										</View>
+							})}
+						</View>
+						<View style={{ marginTop: 5 }}>
+							<Text style={styles.modalCategoryText}>Stats:</Text>
+							{this.fetchedPokemon[6].map(x => {
+								return 	<View > 
+											<Text>{x.stat.name} {x.base_stat}</Text>
+										</View>
+							})}
+						</View>
+						<Button 
+							mode="contained"  
+							theme={{ roundness: 40 }}
+							style={styles.button}
+							uppercase={false}
+							onPress={() => console.log('Pressed')}>
+							<Text style={styles.buttonText}>More</Text>
+						</Button>
 	  				</Modal>
 			</View>
 		)
@@ -127,6 +169,27 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: 'bold',
 		color: 'white',
+	},
+	modalTitleText:{
+		fontSize: 24,
+		fontWeight: 'bold',
+		color: 'black',
+		marginBottom: 15
+	},
+	modalCategoryText:{
+		flex:1,
+		fontSize: 16,
+		fontWeight: 'bold',
+		color: 'black'
+	},
+	modalItem:{
+		fontSize: 18,
+		color: 'black'
+	},
+	modalRow:{
+		marginTop: 5,
+		flex: 1,
+		flexDirection: 'row'
 	},
 	contentContainer: {
 		backgroundColor: 'white',
@@ -160,9 +223,25 @@ const styles = StyleSheet.create({
 		height: 50,
 	},
 	modalStyle: {
+		margin: 'auto',
+		width: '80vw',
+		height: '60vh',
 		backgroundColor: 'white',
-		padding: 20
+		padding: 20,
+		borderRadius: 30
 	},
+	button:{
+		marginTop: 35,
+		marginLeft: 'auto',
+		marginRight: 'auto',
+		backgroundColor: '#f93318',
+		width: 95,
+		height: 35,
+	},
+	buttonText:{
+		color: 'whitesmoke',
+		fontSize: 14,
+	}
 })
 
 
