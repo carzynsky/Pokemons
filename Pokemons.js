@@ -120,7 +120,7 @@ export default class List extends Component {
 							<Text style={styles.modalCategoryText}>Height: </Text>
 							<Text style={styles.modalItem}>{this.fetchedPokemon[3]}</Text>
 						</View>
-						<View style={{ marginTop: 5 }}>
+						<View style={{ marginTop: 15 }}>
 							<Text style={styles.modalCategoryText}>Types:</Text>
 							{this.fetchedPokemon[4].map(x => {
 								return 	<View > 
@@ -171,10 +171,10 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	modalTitleText:{
+		paddingTop: 15,
 		fontSize: 24,
 		fontWeight: 'bold',
 		color: 'black',
-		marginBottom: 15
 	},
 	modalCategoryText:{
 		flex:1,
@@ -188,7 +188,6 @@ const styles = StyleSheet.create({
 	},
 	modalRow:{
 		marginTop: 5,
-		flex: 1,
 		flexDirection: 'row'
 	},
 	contentContainer: {
@@ -225,13 +224,14 @@ const styles = StyleSheet.create({
 	modalStyle: {
 		margin: 'auto',
 		width: '80vw',
-		height: '60vh',
+		height: '70vh',
+		maxHeight: 500,
 		backgroundColor: 'white',
 		padding: 20,
 		borderRadius: 30
 	},
 	button:{
-		marginTop: 35,
+		marginTop: 15,
 		marginLeft: 'auto',
 		marginRight: 'auto',
 		backgroundColor: '#f93318',
