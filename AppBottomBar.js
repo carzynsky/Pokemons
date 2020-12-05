@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { BottomNavigation, Text } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
-import Home from './Home';
-import Pokemons from './Pokemons';
-import Favourites from './Favourites';
-import Other from './Other';
+import * as React from 'react'
+import { BottomNavigation } from 'react-native-paper'
+import { StyleSheet } from 'react-native'
+import Home from './Home'
+import PokemonsRoutes from './PokemonsRoutes'
+import Favourites from './Favourites'
+import Other from './Other'
 
 const HomeRoute = () =>  <Home />;
 
-const MusicRoute = () => <Pokemons />;
+const PokemonsRoute = () => <PokemonsRoutes />;
 
-const AlbumsRoute = () => <Favourites />;
+const FavouritesRoute = () => <Favourites />;
 
-const RecentsRoute = () => <Other />;
+const OtherRoute = () => <Other />;
 
 const AppBottomBar = () => {
   const [index, setIndex] = React.useState(0);
@@ -25,9 +25,9 @@ const AppBottomBar = () => {
 
   const renderScene = BottomNavigation.SceneMap({
     home: HomeRoute,
-    pokemons: MusicRoute,
-    favourites: AlbumsRoute,
-    other: RecentsRoute,
+    pokemons: PokemonsRoute,
+    favourites: FavouritesRoute,
+    other: OtherRoute
   });
 
   return (

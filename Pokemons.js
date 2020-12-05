@@ -168,25 +168,19 @@ export default class List extends Component {
 						<View style={{ marginTop: 15 }}>
 							<Text style={styles.modalCategoryText}>Types:</Text>
 							{this.fetchedPokemon[4].map(x => {
-								return 	<View > 
-											<Text>{x.type.name}</Text>
-										</View>
+								return 	<View><Text>{x.type.name}</Text></View>
 							})}
 						</View>
 						<View style={{ marginTop: 5 }}>
 							<Text style={styles.modalCategoryText}>Abilities:</Text>
 							{this.fetchedPokemon[5].map(x => {
-								return 	<View > 
-											<Text>{x.ability.name}</Text>
-										</View>
+								return 	<View><Text>{x.ability.name}</Text></View>
 							})}
 						</View>
 						<View style={{ marginTop: 5 }}>
 							<Text style={styles.modalCategoryText}>Stats:</Text>
 							{this.fetchedPokemon[6].map(x => {
-								return 	<View > 
-											<Text>{x.stat.name} {x.base_stat}</Text>
-										</View>
+								return 	<View><Text>{x.stat.name} {x.base_stat}</Text></View>
 							})}
 						</View>
 						<Button 
@@ -194,7 +188,9 @@ export default class List extends Component {
 							theme={{ roundness: 40 }}
 							style={styles.button}
 							uppercase={false}
-							onPress={() => console.log('Pressed')}>
+							onPress={() => this.props.navigation.navigate('Details', {
+								pokemonName: this.fetchedPokemon[1]
+							})}>
 							<Text style={styles.buttonText}>More</Text>
 						</Button>
 	  				</Modal>
