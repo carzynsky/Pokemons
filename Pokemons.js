@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import pokemons from './pokemons.json'
-import { Modal, Searchbar, Button } from 'react-native-paper';
+import { Modal, Searchbar, Button, ActivityIndicator, Colors } from 'react-native-paper';
+import Voice from '@react-native-community/voice';
 
 const MySearchbar = (props) => {
-	const [searchQuery, setSearchQuery] = React.useState('');
+	const [searchQuery, setSearchQuery] = useState('');
+	const [started, setStarted] = useState(false)
+	const [recognized, setRecognized] = useState(false)
+	const [results, setResults] = useState([])
 
 	const onChangeSearch = query => {
 		setSearchQuery(query);
@@ -14,14 +18,48 @@ const MySearchbar = (props) => {
 		props.handler(pokemonsToRender);
 	}
 
+	// const handleVoiceSearching = () => {
+	// 	props.voiceSearchHandle()
+	// 	Voice.start('en-US')
+	// }
+
+	Voice.onSpeechResults = (e) => {
+		setResults(e.value)
+		console.log(e.value)
+		props.voiceSearchHandle
+	}
+
+	Voice.onSpeechRecognized = (e) => {
+		setRecognized(true)
+	}
+
+	Voice.onSpeechStart = (e) => {
+		setStarted(true)
+	}
+
+	async function startRecognition(e){
+		setStarted(false)
+		setRecognized(false)
+		setResults([])
+		try {
+			props.voiceSearchHandle()
+			await Voice.start('en-US');
+		} catch (e) {
+			console.error(e);
+		}
+	  }
 	return (
-	  <Searchbar
-		placeholder="Search"
-		onChangeText={onChangeSearch}
-		value={searchQuery}
-	  />
+		<View>
+			<Searchbar
+				placeholder="Search"
+				onChangeText={onChangeSearch}
+				value={searchQuery}/>
+			<Button icon='microphone' onPress={startRecognition}>Voice search</Button>
+		</View>
+	  
 	);
   };
+
 
 export default class List extends Component {
 	constructor(props) {
@@ -36,12 +74,15 @@ export default class List extends Component {
 			data: this.initData,
 			itemToRender: this.itemToRender,
 			searchValue: this.searchValue,
-			visible: false
+			visible: false,
+			voiceSearchModalVisible: false
 		}
 	}
 
 	_hideModal = () => this.setState({ visible: false });
 
+	// handle open / close
+	handleVoiceSearchModal = () => this.setState({ voiceSearchModalVisible: !this.state.voiceSearchModalVisible })
 
 	handleChange(value) {
 		this.setState({ data: value, itemToRender:20 });
@@ -91,7 +132,7 @@ export default class List extends Component {
 				<View style={styles.header}>
 					<Text style={styles.headerText}>Header</Text>
 				</View>
-				<MySearchbar style={styles.searchbar} handler={this.handleChange.bind(this)}></MySearchbar>
+				<MySearchbar style={styles.searchbar} handler={this.handleChange.bind(this)} voiceSearchHandle={this.handleVoiceSearchModal.bind(this)}></MySearchbar>
 				<ScrollView
 					scrollEventThrottle={1}
 
@@ -110,6 +151,10 @@ export default class List extends Component {
 							{items}
 						</View>
 					</ScrollView>
+					<Modal visible={this.state.voiceSearchModalVisible} onDismiss={this.handleVoiceSearchModal} contentContainerStyle={styles.voiceSearchModal}>
+						<ActivityIndicator animating={true} color={Colors.red800} size='large'/>
+						<Text style={styles.modalTitleText}>Listening...</Text>
+					</Modal>
 					<Modal visible={this.state.visible} onDismiss={this._hideModal} contentContainerStyle={styles.modalStyle}>
 						<Text style={styles.modalTitleText}>{this.fetchedPokemon[1].toUpperCase()}</Text>
 						<View style={styles.modalRow}>
@@ -226,6 +271,15 @@ const styles = StyleSheet.create({
 		width: '80vw',
 		height: '70vh',
 		maxHeight: 500,
+		backgroundColor: 'white',
+		padding: 20,
+		borderRadius: 30
+	},
+	voiceSearchModal:{
+		margin: 'auto',
+		alignItems: 'center',
+		height: 200,
+		width: 200,
 		backgroundColor: 'white',
 		padding: 20,
 		borderRadius: 30
