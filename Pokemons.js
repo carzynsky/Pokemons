@@ -1,8 +1,9 @@
 import React, { Component, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import pokemons from './pokemons.json'
-import { Modal, Searchbar, Button, ActivityIndicator, Colors } from 'react-native-paper';
+import { Modal, Searchbar, Button, ActivityIndicator, Colors, IconButton } from 'react-native-paper';
 import Voice from '@react-native-community/voice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MySearchbar = (props) => {
 	const [searchQuery, setSearchQuery] = useState('');
@@ -75,8 +76,52 @@ export default class List extends Component {
 			itemToRender: this.itemToRender,
 			searchValue: this.searchValue,
 			visible: false,
-			voiceSearchModalVisible: false
+			voiceSearchModalVisible: false,
+			favourites: {}
 		}
+	}
+
+	async componentDidMount() {
+		// await this.storeData({});
+		const data = await this.getData();
+		console.log(data);
+		this.setState({ favourites: data});
+	
+	}
+
+	storeData = async (value) => {
+		try {
+		  const jsonValue = JSON.stringify(value)
+		  await AsyncStorage.setItem('@favourites', jsonValue)
+		} catch (e) {
+		  // saving error
+		}
+	}
+
+	getData = async () => {
+		try {
+		  const value = await AsyncStorage.getItem('@favourites')
+		  return value != null ? JSON.parse(value) : {};
+		} catch(e) {
+		  // error reading value
+		}
+	  }
+
+	storeFavourite = async (name) => {
+		if (this.state.favourites[name] === undefined)
+			this.state.favourites[name] = name;
+		else 
+			delete this.state.favourites[name];
+		await this.storeData(this.state.favourites);
+
+		const data = await this.getData();
+		console.log(data);
+	}
+
+	getStar(name) {
+		if (this.state.favourites[name] === undefined)
+			return "star-outline";
+		return "star";
 	}
 
 	_hideModal = () => this.setState({ visible: false });
@@ -102,6 +147,8 @@ export default class List extends Component {
 			console.error(error)
 		});
 	}
+
+
 
 	render() {
 		const items = this.state.data.map((item, index) => {
@@ -156,6 +203,7 @@ export default class List extends Component {
 						<Text style={styles.modalTitleText}>Listening...</Text>
 					</Modal>
 					<Modal visible={this.state.visible} onDismiss={this._hideModal} contentContainerStyle={styles.modalStyle}>
+					<IconButton icon={this.getStar(this.fetchedPokemon[1])} color={Colors.yellow300} size={35} onPress={() => this.storeFavourite(this.fetchedPokemon[1])}/>
 						<Text style={styles.modalTitleText}>{this.fetchedPokemon[1].toUpperCase()}</Text>
 						<View style={styles.modalRow}>
 							<Text style={styles.modalCategoryText}>Base experience: </Text>

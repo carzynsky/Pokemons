@@ -8,7 +8,8 @@ const PokemonDetails = ({ route }) => {
     const [types, setTypes] = useState([])
     const [abilities, setAbilities] = useState([])
     const [stats, setStats] = useState([])
-    var url = ""
+    const [url, setUrl] = useState("")
+
 
     useEffect(() => {
         getPokemonFromApi(pokemonName)
@@ -22,8 +23,8 @@ const PokemonDetails = ({ route }) => {
             setTypes(json.types)
             setAbilities(json.abilities)
             setStats(json.stats)
-            url = json['sprites']['other']['official-artwork']['front_default']
-
+            setUrl(json['sprites']['other']['official-artwork']['front_default'])
+            console.log(url)
 		})
 		.catch((error) => {
 			console.error(error)
@@ -48,6 +49,7 @@ const PokemonDetails = ({ route }) => {
                 </View> */}
                 <View style={{ flexDirection: 'column' }}>
                     {/* <Image style={styles.mediumPic} source={require("./assets/pokemonMiniatures/1.png")} /> */}
+                    {console.log(url)}
                     <Image style={styles.mediumPic} source={{ uri: url }} />
                 </View>
                 <View style={{ flexDirection: 'column' }}>

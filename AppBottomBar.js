@@ -3,14 +3,14 @@ import { BottomNavigation } from 'react-native-paper'
 import { StyleSheet } from 'react-native'
 import Home from './Home'
 import PokemonsRoutes from './PokemonsRoutes'
-import Favourites from './Favourites'
+import FavouritesRoutes from './FavouritesRoutes'
 import Other from './Other'
 
 const HomeRoute = () =>  <Home />;
 
 const PokemonsRoute = () => <PokemonsRoutes />;
 
-const FavouritesRoute = () => <Favourites />;
+const FavouritesRoute = () => <FavouritesRoutes />;
 
 const OtherRoute = () => <Other />;
 
