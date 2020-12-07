@@ -77,7 +77,8 @@ export default class List extends Component {
 			searchValue: this.searchValue,
 			visible: false,
 			voiceSearchModalVisible: false,
-			favourites: {}
+			favourites: {},
+			star: "star-outline"
 		}
 	}
 
@@ -118,13 +119,17 @@ export default class List extends Component {
 		console.log(data);
 	}
 
-	getStar(name) {
-		if (this.state.favourites[name] === undefined)
-			return "star-outline";
-		return "star";
+	setStar(name) {
+		if (this.state.favourites[name] === undefined){
+			console.log("outli");
+			this.setState({star:"star-outline"});
+		} else {
+			console.log("outli");	
+			this.setState({star:"star"});
+		}
 	}
 
-	_hideModal = () => this.setState({ visible: false });
+	_hideModal = () => this.setState({ visible: false, star:"star-outline" });
 
 	// handle open / close
 	handleVoiceSearchModal = () => this.setState({ voiceSearchModalVisible: !this.state.voiceSearchModalVisible })
@@ -140,7 +145,7 @@ export default class List extends Component {
 			let imgUrl = "./assets/pokemonMiniatures/" + json.id + ".png"
 			const data = [imgUrl, json.name, json.base_experience, json.height, json.types, json.abilities, json.stats]
 			this.fetchedPokemon = data
-			console.log(json)
+			this.setStar(name.toLowerCase())
 			this.setState({ visible: true })
 		})
 		.catch((error) => {
@@ -158,7 +163,7 @@ export default class List extends Component {
 
 			if (index +1 <= this.state.itemToRender) {
 				return <TouchableOpacity onPress={()=>{
-					this.getPokemonFromApi(item[3])
+					this.getPokemonFromApi(item[3]);
 					}}>
 					<View key={index} style={styles.item}>
 						<View style={styles.marginLeft}>
@@ -203,7 +208,7 @@ export default class List extends Component {
 						<Text style={styles.modalTitleText}>Listening...</Text>
 					</Modal>
 					<Modal visible={this.state.visible} onDismiss={this._hideModal} contentContainerStyle={styles.modalStyle}>
-					<IconButton icon={this.getStar(this.fetchedPokemon[1])} color={Colors.yellow300} size={35} onPress={() => this.storeFavourite(this.fetchedPokemon[1])}/>
+					<IconButton icon={this.state.star} color={Colors.yellow300} size={35} onPress={() => {this.storeFavourite(this.fetchedPokemon[1]); this.setStar(this.fetchedPokemon[1])}}/>
 						<Text style={styles.modalTitleText}>{this.fetchedPokemon[1].toUpperCase()}</Text>
 						<View style={styles.modalRow}>
 							<Text style={styles.modalCategoryText}>Base experience: </Text>

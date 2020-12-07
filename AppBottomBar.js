@@ -1,54 +1,45 @@
-import * as React from 'react'
-import { BottomNavigation } from 'react-native-paper'
-import { StyleSheet } from 'react-native'
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home'
-import PokemonsRoutes from './PokemonsRoutes'
-import FavouritesRoutes from './FavouritesRoutes'
-import Other from './Other'
+import Pokemons from './Pokemons'
+import Favourites from './Favourites'
+import PokemonDetails from './PokemonDetails'
 
-const HomeRoute = () =>  <Home />;
 
-const PokemonsRoute = () => <PokemonsRoutes />;
+const PokemonsStack = createStackNavigator();
 
-const FavouritesRoute = () => <FavouritesRoutes />;
-
-const OtherRoute = () => <Other />;
-
-const AppBottomBar = () => {
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: 'home', title: 'Home', icon: 'home' },
-    { key: 'pokemons', title: 'Pokemony' , icon: 'pokeball' },
-    { key: 'favourites', title: 'Ulubione', icon: 'star' },
-    { key: 'other', title: 'Inne', icon: 'settings' },
-  ]);
-
-  const renderScene = BottomNavigation.SceneMap({
-    home: HomeRoute,
-    pokemons: PokemonsRoute,
-    favourites: FavouritesRoute,
-    other: OtherRoute
-  });
-
+function PokemonsStackScreen() {
   return (
-    <BottomNavigation
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-      activeColor={index === 1 ? 'whitesmoke' : 'black'}
-      
-      barStyle={{backgroundColor: 
-        index === 0 ? '#fff933' 
-        : index === 1 ? '#f93318'
-        : 'whitesmoke'}}
-    />
+    <PokemonsStack.Navigator>
+      <PokemonsStack.Screen options={{ headerShown: false }} name="Pokedex" component={Pokemons} />
+      <PokemonsStack.Screen name="Details" component={PokemonDetails} />
+    </PokemonsStack.Navigator>
   );
-};
+}
 
-export default AppBottomBar;
+const FavouriteStack = createStackNavigator();
 
-const styles = StyleSheet.create({
-  colors: {
-    backgroundColor: '#f8fc03'
-  },
-});
+function FavouriteStackScreen() {
+  return (
+    <FavouriteStack.Navigator>
+      <FavouriteStack.Screen options={{ headerShown: false }} name="Favourites" component={Favourites} />
+      <FavouriteStack.Screen name="Details" component={PokemonDetails} />
+    </FavouriteStack.Navigator>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
+export default function AppBottomBar() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen name="Pokedex" component={PokemonsStackScreen} />
+        <Tab.Screen name="Favourites" component={FavouriteStackScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}

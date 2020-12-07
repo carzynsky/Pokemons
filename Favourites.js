@@ -28,7 +28,19 @@ export default class Favourites extends Component {
   }
 
   async componentDidMount() {
-		// await this.storeData({});
+    this.props.navigation.addListener('focus', async () => {
+      await this.getFavourites()
+    });
+    // await this.getFavourites();
+	
+  }
+
+  componentWillUnmount () {
+    this.focusListener.remove()
+  }
+
+  
+  async getFavourites() {
     const favDict = await this.getData();
     let filterFunc = this.inDict(favDict);
 
@@ -37,8 +49,7 @@ export default class Favourites extends Component {
     });
     
 		this.setState({ data: favouritesToRender});
-	
-	}
+  }
 
 	storeData = async (value) => {
 		try {
@@ -65,7 +76,6 @@ export default class Favourites extends Component {
 	};
 
 	render() {
-    
 		const items = this.state.data.map((item, index) => {
 			const types = item[4].split(' ').map((type) =>  {
 				return <Image key={index + type} style={styles.tinyLogo} source={require("" + "./assets/pokemonTypes/" + (type) + ".png")} />
@@ -91,6 +101,7 @@ export default class Favourites extends Component {
 		})
 
 		return (
+      
 			<View style={styles.contentContainer}>
 				<View style={styles.header}>
 					<Text style={styles.headerText}>Header</Text>
