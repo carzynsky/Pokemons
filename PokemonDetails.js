@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     typeCard:{
-        backgroundColor: '#00bfff',
+        backgroundColor: '#483d8b',
         width: "auto",
         height: "auto",
         marginRight: 5,
