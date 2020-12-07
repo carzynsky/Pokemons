@@ -72,7 +72,7 @@ const PokemonDetails = ({ route }) => {
                 </View>
                 <View style={{ flexDirection: 'column', marginTop: 30 }}>
                     <Text style={styles.mediumHeader}>Types</Text>
-                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10 , justifyContent:'center', width: "95%" }}>
+                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10 , justifyContent:'center'}}>
                         {types.map(x => {
 								return <View key={x.type.name} style={styles.typeCard}>
                                             <Text style={styles.typeCardText}>{x.type.name}</Text>
@@ -82,7 +82,7 @@ const PokemonDetails = ({ route }) => {
                 </View>
                 <View style={{ flexDirection: 'column', marginTop: 30 }}>
                     <Text style={styles.mediumHeader}>Abilities</Text>
-                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10, width: "95%" , justifyContent:'center'}}>
+                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10, justifyContent:'center'}}>
                         {abilities.map(x => {
 								return <View key={x.ability.name} style={styles.abilityCard}>
                                             <Text style={styles.typeCardText}>{x.ability.name}</Text>
@@ -92,7 +92,7 @@ const PokemonDetails = ({ route }) => {
                 </View>
                 <View style={{ flexDirection: 'column', marginTop: 30}}>
                     <Text style={styles.mediumHeader}>Stats</Text>
-                    <View style={{ flexDirection: 'row', paddingLeft: 18,marginLeft:'15%', marginTop: 10, width: '70%', flexWrap:'wrap', justifyContent:'center'}}>
+                    <View style={{ flexDirection: 'row', paddingLeft: 18,marginLeft:'10%', marginTop: 10, width: '80%', flexWrap:'wrap', justifyContent:'center'}}>
                         {stats.map(x => {
 								return <View key={x.stat.name} style={styles.statCard}>
                                             <Text style={styles.typeCardText}>{x.stat.name} {x.base_stat}</Text>
@@ -102,7 +102,7 @@ const PokemonDetails = ({ route }) => {
                 </View>
                 <View style={{ flexDirection: 'column', marginTop: 30 , justifyContent:'center'}}>
                     <Text style={styles.mediumHeader}>Type effectiveness</Text>
-                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10, width: '70%', flexWrap:'wrap', justifyContent:'center',marginLeft:'15%'}}>
+                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10, width: '80%', flexWrap:'wrap', justifyContent:'center',marginLeft:'10%'}}>
                     {pokeTypes.map(x => {
                         var effectiveness = {
                             loveJS: 1
@@ -201,8 +201,7 @@ const styles = StyleSheet.create({
     mediumHeader:{
         color: 'black',
         fontSize: 22,
-        padding: 18,
-        width:'95%',
+        paddingVertical: 18,
         textAlign: 'center'
     },
     cardTextData:{
