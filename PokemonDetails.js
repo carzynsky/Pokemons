@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, Text, StyleSheet, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import pokeTypes from './types.json';
 const PokemonDetails = ({ route }) => {
     const { pokemonName } = route.params;
     const [pokemon, setPokemon] = useState([])
@@ -54,31 +54,25 @@ const PokemonDetails = ({ route }) => {
                 </View>
                 <View style={{ flexDirection: 'column' }}>
                     <View style={styles.cardInfo}>
-                        <View style={{ marginTop: 15, flexDirection: 'row' }}>
-                            <View style={{ width: '50%', flexDirection: 'column' }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
                                 <Text style={styles.cardText}>Height</Text>
                                 <Text style={styles.cardTextData}>{pokemon.height}</Text>
                             </View>
-                            <View style={{ width: '50%', flexDirection: 'column' }}>
+                            <View style={{ flexDirection: 'column' }}>
                                 <Text style={styles.cardText}>Base experience</Text>
                                 <Text style={styles.cardTextData}>{pokemon.base_experience}</Text>
                             </View>
-                        </View>
-                        <View style={{ marginTop: 15, flexDirection: 'row' }}>
-                            <View style={{ width: '50%', flexDirection: 'column' }}>
+                            <View style={{  flexDirection: 'column' }}>
                                 <Text style={styles.cardText}>Weight</Text>
                                 <Text style={styles.cardTextData}>{pokemon.weight}</Text>
                             </View>
-                            {/* <View style={{ width: '50%', flexDirection: 'column' }}>
-                                <Text style={styles.cardText}>Weight</Text>
-                                <Text style={styles.cardTextData}>{pokemon.weight}</Text>
-                            </View> */}
                         </View>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'column', marginTop: 30 }}>
                     <Text style={styles.mediumHeader}>Types</Text>
-                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10 }}>
+                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10 , justifyContent:'center', width: "95%" }}>
                         {types.map(x => {
 								return <View key={x.type.name} style={styles.typeCard}>
                                             <Text style={styles.typeCardText}>{x.type.name}</Text>
@@ -88,7 +82,7 @@ const PokemonDetails = ({ route }) => {
                 </View>
                 <View style={{ flexDirection: 'column', marginTop: 30 }}>
                     <Text style={styles.mediumHeader}>Abilities</Text>
-                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10 }}>
+                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10, width: "95%" , justifyContent:'center'}}>
                         {abilities.map(x => {
 								return <View key={x.ability.name} style={styles.abilityCard}>
                                             <Text style={styles.typeCardText}>{x.ability.name}</Text>
@@ -96,13 +90,48 @@ const PokemonDetails = ({ route }) => {
 						})}
                     </View>
                 </View>
-                <View style={{ flexDirection: 'column', marginTop: 30 }}>
+                <View style={{ flexDirection: 'column', marginTop: 30}}>
                     <Text style={styles.mediumHeader}>Stats</Text>
-                    <View style={{ flexDirection: 'column', paddingLeft: 18, marginTop: 10 }}>
+                    <View style={{ flexDirection: 'row', paddingLeft: 18,marginLeft:'15%', marginTop: 10, width: '70%', flexWrap:'wrap', justifyContent:'center'}}>
                         {stats.map(x => {
 								return <View key={x.stat.name} style={styles.statCard}>
                                             <Text style={styles.typeCardText}>{x.stat.name} {x.base_stat}</Text>
                                         </View>
+						})}
+                    </View>
+                </View>
+                <View style={{ flexDirection: 'column', marginTop: 30 , justifyContent:'center'}}>
+                    <Text style={styles.mediumHeader}>Type effectiveness</Text>
+                    <View style={{ flexDirection: 'row', paddingLeft: 18, marginTop: 10, width: '70%', flexWrap:'wrap', justifyContent:'center',marginLeft:'15%'}}>
+                    {pokeTypes.map(x => {
+                        var effectiveness = {
+                            loveJS: 1
+                        }
+                        types.map(y=>{
+                            if(x.weaknesses.includes(y.type.name))effectiveness.loveJS/=2
+                            if(x.strengths.includes(y.type.name)) effectiveness.loveJS*=2
+                            if(x.immunes.includes(y.type.name))effectiveness.loveJS=0
+                        })
+                            if(effectiveness.loveJS===1){
+								return <View key={x.name} style={styles.typeCard}>
+                                            <Text style={styles.typeCardText}>{x.name+" x"+effectiveness.loveJS}</Text>
+                                        </View>
+                            }
+                            if(effectiveness.loveJS<1 && effectiveness.loveJS>0){
+								return <View key={x.name} style={styles.typeCardLose} >
+                                            <Text style={styles.typeCardText}>{x.name+" x"+effectiveness.loveJS}</Text>
+                                        </View>
+                            }
+                            if(effectiveness.loveJS===0){
+								return <View key={x.name} style={styles.typeCardNull} >
+                                            <Text style={styles.typeCardText}>{x.name+" x"+effectiveness.loveJS}</Text>
+                                        </View>
+                            }
+                            if(effectiveness.loveJS>1){
+								return <View key={x.name} style={styles.typeCardWin} >
+                                            <Text style={styles.typeCardText}>{x.name+" x"+effectiveness.loveJS}</Text>
+                                        </View>
+                            }
 						})}
                     </View>
                    
@@ -124,22 +153,25 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     typeCard:{
-        backgroundColor: '#fd7d24',
-        width: 90,
-        height: 35,
+        backgroundColor: '#00bfff',
+        width: "auto",
+        height: "auto",
         marginRight: 5,
-        borderRadius: 5
+        marginVertical: 3,
+        borderRadius: 5,
+        padding: 15,
+        paddingVertical: 3
     },
     abilityCard:{
         backgroundColor: '#b97fc9',
-        width: 90,
+        width: '90',
         height: 35,
         marginRight: 5,
         borderRadius: 5
     },
     statCard:{
         backgroundColor: '#9bcc50',
-        width: 120,
+        width: 'auto',
         height: 35,
         marginRight: 5,
         borderRadius: 5,
@@ -148,29 +180,37 @@ const styles = StyleSheet.create({
     typeCardText:{
         color: 'whitesmoke',
         textAlign: 'center',
-        margin: 'auto'
+        margin: 'auto',
+        padding: 3
     },
     cardInfo:{
         backgroundColor: '#30a7d7',
         borderRadius: 5,
-        width: '90%',
-        height: 150,
+        width: 'auto',
+        height: 'auto',
         margin: 'auto',
+        display: 'flex'
     },
     cardText:{
         color: 'whitesmoke',
         fontSize: 18,
-        paddingLeft: 15
+        padding: 15,
+        paddingBottom: 0,
+        textAlign: 'center'
     },
     mediumHeader:{
         color: 'black',
         fontSize: 22,
-        paddingLeft: 18
+        padding: 18,
+        width:'95%',
+        textAlign: 'center'
     },
     cardTextData:{
         color: 'black',
         fontSize: 18,
-        paddingLeft: 15
+        padding: 15,
+        paddingTop: 0,
+        textAlign: 'center'
     },
     contentContainer: {
 		backgroundColor: 'white',
@@ -188,5 +228,35 @@ const styles = StyleSheet.create({
 		margin: 'auto',
 		width: 175,
 		height: 175,
-	},
+    },
+    typeCardLose:{
+        backgroundColor: '#b22222',
+        width: "auto",
+        height: "auto",
+        marginRight: 5,
+        marginVertical: 3,
+        borderRadius: 5,
+        padding: 15,
+        paddingVertical: 3
+    },
+    typeCardNull:{
+        backgroundColor: '#696969',
+        width: "auto",
+        height: "auto",
+        marginRight: 5,
+        marginVertical: 3,
+        borderRadius: 5,
+        padding: 15,
+        paddingVertical: 3
+    },
+    typeCardWin:{
+        backgroundColor: '#228b22',
+        width: "auto",
+        height: "auto",
+        marginRight: 5,
+        marginVertical: 3,
+        borderRadius: 5,
+        padding: 15,
+        paddingVertical: 3
+    },
 })
